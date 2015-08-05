@@ -1,0 +1,1 @@
+this config allow me to use my azerty keyboard on guix
