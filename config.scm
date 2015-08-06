@@ -37,7 +37,7 @@
 
   ;; Add Xfce and Ratpoison; that allows us to choose
   ;; sessions using either of these at the log-in screen.
-  (packages (cons* xfce ratpoison    ;desktop environments
+  (packages (cons* xfce              ;desktop environments
                    xterm wicd avahi  ;useful tools
                    nss-certs         ;for HTTPS access
                    %base-packages))
