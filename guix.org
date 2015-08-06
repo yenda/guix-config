@@ -1,3 +1,36 @@
+
+
+
+* keyboard layout
+
+Run the Makefile with
+
+#+BEGIN_SRC sh
+  make
+#+END_SRC
+
+or add this to config.scm
+
+#+BEGIN_SRC lisp
+    (services (cons* (console-keymap-service "fr")
+                     %desktop-services))
+#+END_SRC
+
+and add this in /etc/X11/xorg.conf.d/10-evdev.conf
+
+#+BEGIN_SRC sh
+  Section  "InputClass"
+            Identifier "evdev keyboard catchall"
+            MatchIsKeyboard "on"
+            MatchDevicePath "/dev/input/event*"
+            Driver "evdev"
+         
+            # Keyboard layouts
+            Option "XkbLayout" "fr"
+  EndSection
+#+END_SRC
+
+
 * system reconfigure
 
 #+BEGIN_SRC sh
@@ -15,56 +48,119 @@ To keep the failed build in /tmp
 guix build -K
 #+END_SRC
 
-the failed build directory will be in /tmp/nix-build-*
-<mark_weaver> in there will be a 'environment-variables' file with the
-    environment variable settings used during the build.
-<mark_weaver> then you can "env -i $(which bash)" to spawn a shell
-    with an empty environment, then source that file to get the
-    environment variable settings, and then go from there.
-<mark_weaver> it is not quite the same as the build environment, since
-    it is not in a chroot and not isolated from the network, but still
-    often useful
+The failed build directory will be in /tmp/nix-build-*
 
-<mark_weaver> probably run "make check" from the top-level directory,
-    although it looks like you also need to set the HOME environment
-    variable to something that can be written to (it's done in the
-    pre-check phase)
-> 
+Spawn a shell
+
+#+BEGIN_SRC sh
+  env -i $(which bash)
+  source environment-variables
+#+END_SRC
+
+You might need to use chown to change the owner of the folder
+
+It is not quite the same as the build environment, since it is not in
+a chroot and not isolated from the network, but still often useful
+
+* stuff
+
+* Kernel panic
+
+  Difficult start. I ended up with a
+
+* Network configuration
+
+  I ran =ifconfig= which of course returned nothing because I forgot
+  =-all= flag.
 
 
+#+BEGIN_SRC sh
+  ifconfig -all
+#+END_SRC
 
-<mark_weaver> okay, so the problem is that nothing was installed in
-    the output directory
-<mark_weaver> for projects that have a 'configure' script, that's
-    taken care of because gnu-build-system passes --prefix=<output> to
-    configure
-<amz3> how do you know?
-<amz3> (that nothing was installed in the output directory)
-<mark_weaver> otherwise, you need to do it in some other way.  for
-    projects with makefiles, sometimes it can be done by including
-    PREFIX=<output> in the make-flags.
-<davexunit> amz3: because the output directory wasn't created
-<mark_weaver> amz3: because of the error message "failed to produce
-    output path"
-<amz3> got it
-<mark_weaver> the name output directory can be obtained with
-    (assoc-ref outputs "out") within a phase procedure if it accepts
-    the 'outputs' keyword argument.
-<mark_weaver> (in general, there can be more than one output, hence
-    the lookup)
-<mark_weaver> somehow, that directory needs to be created, and
-    probably have things like /bin and /lib subdirectories.
-<mark_weaver> the thing is, usually if you fail to tell it where to
-    install, it will try to install somewhere in /usr and fail.
-<mark_weaver> so I suspect that it didn't try to install at all
-<cjbarnes18`> good evening folks, having troubles installing guixos in
-    a vm, am attempting to install using USB media. fails downloading
-    ../bootstrap/../guile-2.0.9.tar.xz
-<amz3> the fact that phase procedure are are not lambda is
-    strange. out is an argument but it doesn't appear.
+This returns the list of the network interface available on the
+computer. Since my computer both has ethernet and wifi connection I
+opt for the ethernet one to avoid driver complications.
+
+Running dhclient to configure it
+
+#+BEGIN_SRC sh
+  dhclient enp5s0
+#+END_SRC
 
 
 
-https://github.com/codemac/guix-pkgs/blob/master/codemac/packages/go.scm
+Build of system.drv failed
 
-https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/compilers/go/1.4.nix
+guix pull
+
+failed to download
+
+I realized packages were not being downloaded because my network card
+was not activated
+
+ifconfig enp5s0 up
+dhclient enp5s0
+
+
+I still get the following error running guix system init : "guix
+    substitute: warning: failed to look up host 'hydra.gnu.org' (name
+    or service not known), substituter disabled" "guix system: error:
+    build failed: unexpected EOF reading a line".
+
+guix pull
+
+In ./gnu/nuilf/linux-boot.scm: 403:35 1 (#<procedure 2b272a0 at
+    ./gnu/build/linux-boot.scm:369:3[square]>)
+In unknown file:
+0 (scm-error misc-error #f "~A ~S" ("failed to resolv[square]"
+    [square]) [square])
+
+
+I used find / -name "hydra.gnu.org.pub" to find hydra public key
+
+guix archive --authorize < key.pub
+
+guix pull
+
+guix system init configfile /mnt/
+
+
+
+reboot
+
+connect with root
+change user password
+
+mkdir /home/yenda
+cp /etc/skel/.* /home/yenda/
+
+passwd
+passwd yenda
+
+
+* TODO screen resolution
+  - State "TODO"       from ""           [2015-07-19 Sun 06:46]
+alezost
+xf86-video-ati
+
+guix package -i xorg-server
+    xf86-input-evdev xf86-video-fbdev xf86-video-modesetting
+    xf86-video-ati
+
+sudo X :1
+    vt8 -nolisten tcp -logverbose -noreset -modulepath
+    "$HOME/.guix-profile/lib/xorg/modules"
+* TODO sbcl
+  - State "TODO"       from ""           [2015-07-19 Sun 06:46]
+* 
+
+
+
+
+
+<mark_weaver> http://www.kosagi.com/w/index.php?title=Novena_Main_Page
+    and https://www.crowdsupply.com/sutajio-kosagi/novena for the
+    novena
+<mark_weaver> http://www.lowrisc.org/
+<mark_weaver> http://libreboot.org/
