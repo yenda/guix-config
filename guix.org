@@ -1,9 +1,21 @@
-<davexunit> yenda: you should use 'guix build -K' to keep the failed
-    build around in /tmp
-<mark_weaver> yenda: if you build with 'guix build -K' to keep the
-    failed build directory, then you can re-run the tests from that
-    failed directory, manually.
-<mark_weaver> the failed build directory will be in /tmp/nix-build-*
+* system reconfigure
+
+#+BEGIN_SRC sh
+sudo ln -s ~/guix /root/.config/guix/latest
+sudo guix system reconfigure /etc/config.scm
+rm /root/.config/guix/latest ?
+ln -s ~/guix ~/.config/guix/latest"
+#+END_SRC
+
+* build packages
+
+To keep the failed build in /tmp
+
+#+BEGIN_SRC sh
+guix build -K
+#+END_SRC
+
+the failed build directory will be in /tmp/nix-build-*
 <mark_weaver> in there will be a 'environment-variables' file with the
     environment variable settings used during the build.
 <mark_weaver> then you can "env -i $(which bash)" to spawn a shell
