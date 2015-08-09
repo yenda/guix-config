@@ -33,11 +33,18 @@ and add this in /etc/X11/xorg.conf.d/10-evdev.conf
 * system reconfigure
 
 #+BEGIN_SRC sh
+sudo rm /home/yenda/.config/guix/latest
 sudo ln -s ~/guix /root/.config/guix/latest
 sudo guix system reconfigure /etc/config.scm
-sudo rm /root/.config/guix/latest ?
-ln -s ~/guix ~/.config/guix/latest"
+sudo rm /root/.config/guix/latest
+ln -s ~/guix ~/.config/guix/latest
 #+END_SRC
+
+yenda@project2501 ~ [env]$ sudo guix system reconfigure /etc/config.scm
+guix system: error: failed to load '/etc/config.scm':
+/etc/config.scm:6:0: In procedure #<procedure 49c94c0 ()>:
+/etc/config.scm:6:0: In procedure module-lookup: Unbound variable: linux-custom
+
 
 * build packages
 
