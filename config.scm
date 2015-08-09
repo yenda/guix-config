@@ -1,14 +1,17 @@
 ;; This is an operating system configuration template
 ;; for a "desktop" setup with X11.
 
-(use-modules (gnu) (gnu system nss))
+(use-modules (gnu) (gnu system nss) (linux-nonfree))
 (use-service-modules desktop)
-(use-package-modules xfce ratpoison wicd avahi xorg certs)
+(use-package-modules xfce wicd avahi xorg certs)
 
 (operating-system
   (host-name "project2501")
   (timezone "Europe/Paris")
   (locale "en_US.UTF-8")
+
+  (kernel linux-nonfree)
+  (firmware (cons* radeon-RS780-firmware-non-free %base-firmware))
 
   ;; Assuming /dev/sdX is the target hard disk, and "root" is
   ;; the label of the target root file system.
@@ -26,20 +29,25 @@
                       %base-file-systems))
 
   (swap-devices '("/dev/sda2"))
-
+  (groups (cons (user-group (name "nixbld")) %base-groups))
   (users (list (user-account
                 (name "yenda")
                 (comment "Lisp rocks")
                 (group "users")
                 (supplementary-groups '("wheel" "netdev"
-                                        "audio" "video"))
+                                        "audio" "video"
+					"nixbld"))
                 (home-directory "/home/yenda"))))
 
   ;; Add Xfce and Ratpoison; that allows us to choose
   ;; sessions using either of these at the log-in screen.
-  (packages (cons* xfce              ;desktop environments
+  (packages (cons* xfce		     ;desktop environments
                    xterm wicd avahi  ;useful tools
                    nss-certs         ;for HTTPS access
+		   xorg-server xf86-input-evdev
+		   xf86-video-fbdev
+		   xf86-video-modesetting
+		   xf86-video-ati
                    %base-packages))
 
   ;; Use the "desktop" services, which include the X11
