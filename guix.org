@@ -1,5 +1,14 @@
 xorg-server xf86-input-evdev xf86-video-fbdev xf86-video-modesetting xf86-video-ati
 
+* Remove the horrible beep
+
+One of the first thing to do if you don't want to turn deaf when it
+occurs while you are wearing headphones
+
+#+BEGIN_SRC sh
+  rmmod pcspkr
+#+END_SRC
+
 * keyboard layout
 
 Run the Makefile with
