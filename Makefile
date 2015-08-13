@@ -1,6 +1,6 @@
 .PHONY: all x11 guix
 
-all: x11 guix
+all: x11
 
 x11:
 	mkdir -p /etc/X11
