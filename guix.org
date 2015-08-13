@@ -1,5 +1,13 @@
 xorg-server xf86-input-evdev xf86-video-fbdev xf86-video-modesetting xf86-video-ati
 
+* Build guix from source
+
+#+BEGIN_SRC emacs-lisp
+  guix environment guix
+  cd ~/guix
+  ./bootstrap && ./configure --localstatedir=/var --with-libgcrypt-prefix=$(guix build libgcrypt | head -1) && make -j2
+#+END_SRC
+
 * Remove the horrible beep
 
 One of the first thing to do if you don't want to turn deaf when it
