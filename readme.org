@@ -1,1 +1,206 @@
-this config allow me to use my azerty keyboard on guix
+xorg-server xf86-input-evdev xf86-video-fbdev xf86-video-modesetting xf86-video-ati
+
+* Build guix from source
+
+#+BEGIN_SRC emacs-lisp
+  guix environment guix
+  cd ~/guix
+  ./bootstrap && ./configure --localstatedir=/var --with-libgcrypt-prefix=$(guix build libgcrypt | head -1) && make -j2
+#+END_SRC
+
+* Remove the horrible beep
+
+One of the first thing to do if you don't want to turn deaf when it
+occurs while you are wearing headphones
+
+#+BEGIN_SRC sh
+  rmmod pcspkr
+#+END_SRC
+
+* keyboard layout
+
+Run the Makefile with
+
+#+BEGIN_SRC sh
+  make
+#+END_SRC
+
+or add this to config.scm
+
+#+BEGIN_SRC lisp
+    (services (cons* (console-keymap-service "fr")
+                     %desktop-services))
+#+END_SRC
+
+and add this in /etc/X11/xorg.conf.d/10-evdev.conf
+
+#+BEGIN_SRC sh
+  Section  "InputClass"
+            Identifier "evdev keyboard catchall"
+            MatchIsKeyboard "on"
+            MatchDevicePath "/dev/input/event*"
+            Driver "evdev"
+
+            # Keyboard layouts
+            Option "XkbLayout" "fr"
+  EndSection
+#+END_SRC
+
+
+* system reconfigure
+
+** Bad old method
+
+#+BEGIN_SRC sh
+sudo rm /home/yenda/.config/guix/latest
+sudo ln -s ~/guix /root/.config/guix/latest
+sudo guix system reconfigure /etc/config.scm
+sudo rm /root/.config/guix/latest
+ln -s ~/guix ~/.config/guix/latest
+#+END_SRC
+
+yenda@project2501 ~ [env]$ sudo guix system reconfigure /etc/config.scm
+guix system: error: failed to load '/etc/config.scm':
+/etc/config.scm:6:0: In procedure #<procedure 49c94c0 ()>:
+/etc/config.scm:6:0: In procedure module-lookup: Unbound variable: linux-custom
+
+** The good way
+
+The first time:
+
+#+BEGIN_SRC sh
+ln -s ~/guix ~/.config/guix/latest
+#+END_SRC
+
+Then:
+
+#+BEGIN_SRC sh
+sudo -E guix system reconfigure /etc/config.scm
+#+END_SRC
+
+sudo -E: preserve-env
+
+* build packages
+
+To keep the failed build in /tmp
+
+#+BEGIN_SRC sh
+guix build -K
+#+END_SRC
+
+The failed build directory will be in /tmp/nix-build-*
+
+Spawn a shell
+
+#+BEGIN_SRC sh
+  env -i $(which bash)
+  source environment-variables
+#+END_SRC
+
+You might need to use chown to change the owner of the folder
+
+It is not quite the same as the build environment, since it is not in
+a chroot and not isolated from the network, but still often useful
+
+* stuff
+
+* Kernel panic
+
+  Difficult start. I ended up with a
+
+* Network configuration
+
+  I ran =ifconfig= which of course returned nothing because I forgot
+  =-all= flag.
+
+
+#+BEGIN_SRC sh
+  ifconfig -all
+#+END_SRC
+
+This returns the list of the network interface available on the
+computer. Since my computer both has ethernet and wifi connection I
+opt for the ethernet one to avoid driver complications.
+
+Running dhclient to configure it
+
+#+BEGIN_SRC sh
+  dhclient enp5s0
+#+END_SRC
+
+
+
+Build of system.drv failed
+
+guix pull
+
+failed to download
+
+I realized packages were not being downloaded because my network card
+was not activated
+
+ifconfig enp5s0 up
+dhclient enp5s0
+
+
+I still get the following error running guix system init : "guix
+    substitute: warning: failed to look up host 'hydra.gnu.org' (name
+    or service not known), substituter disabled" "guix system: error:
+    build failed: unexpected EOF reading a line".
+
+guix pull
+
+In ./gnu/nuilf/linux-boot.scm: 403:35 1 (#<procedure 2b272a0 at
+    ./gnu/build/linux-boot.scm:369:3[square]>)
+In unknown file:
+0 (scm-error misc-error #f "~A ~S" ("failed to resolv[square]"
+    [square]) [square])
+
+
+I used find / -name "hydra.gnu.org.pub" to find hydra public key
+
+guix archive --authorize < key.pub
+
+guix pull
+
+guix system init configfile /mnt/
+
+
+
+reboot
+
+connect with root
+change user password
+
+mkdir /home/yenda
+cp /etc/skel/.* /home/yenda/
+
+passwd
+passwd yenda
+
+
+* TODO screen resolution
+  - State "TODO"       from ""           [2015-07-19 Sun 06:46]
+alezost
+xf86-video-ati
+
+guix package -i xorg-server
+    xf86-input-evdev xf86-video-fbdev xf86-video-modesetting
+    xf86-video-ati
+
+sudo X :1
+    vt8 -nolisten tcp -logverbose -noreset -modulepath
+    "$HOME/.guix-profile/lib/xorg/modules"
+* TODO sbcl
+  - State "TODO"       from ""           [2015-07-19 Sun 06:46]
+* 
+
+
+
+
+
+<mark_weaver> http://www.kosagi.com/w/index.php?title=Novena_Main_Page
+    and https://www.crowdsupply.com/sutajio-kosagi/novena for the
+    novena
+<mark_weaver> http://www.lowrisc.org/
+<mark_weaver> http://libreboot.org/
