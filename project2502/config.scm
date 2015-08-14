@@ -1,9 +1,9 @@
 ;; This is an operating system configuration template
 ;; for a "desktop" setup with X11.
 
-(use-modules (gnu) (gnu system nss) (java-certs) (i3)) 
+(use-modules (gnu) (gnu system nss) (java-certs)(i3)) 
 (use-service-modules desktop)
-(use-package-modules wicd avahi xorg certs)
+(use-package-modules wicd avahi xorg certs suckless fonts)
 
 (operating-system
   (host-name "project2502")
@@ -35,7 +35,8 @@
 
   ;; Add Xfce and Ratpoison; that allows us to choose
   ;; sessions using either of these at the log-in screen.
-  (packages (cons* i3 i3status       ;desktop environments
+  (packages (cons* i3 i3status dmenu ;desktop environments
+                   font-dejavu
                    xterm wicd avahi  ;useful tools
                    nss-certs         ;for HTTPS access
 		   java-certs
