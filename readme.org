@@ -204,6 +204,41 @@ sudo X :1
     novena
 <mark_weaver> http://www.lowrisc.org/
 <mark_weaver> http://libreboot.org/
-* Handle font-cache
+* Use a new font
+
+Some programs (like emacs for instance) require you to run this
+command so they can see the new install font and use it:
+
+#+BEGIN_SRC sh
+  fc-cache -f
+#+END_SRC
+
+** Fix the font-cache
+
+#+BEGIN_QUOTE
 <mark_weaver> I actually think the proper way would be to move the font cache into the profile, and then generate the font cache as part of profile generation
 <mark_weaver> we do something similar with the gtk-icon-cache
+#+END_QUOTE
+
+* Fix the timezone when hardware clock is wrong
+
+Try this command :
+
+#+BEGIN_SRC emacs-lisp
+  date -u
+#+END_SRC
+
+If the timezone is your local timezone, this is wrong, it means your
+hardware is using your timezone, and the software is applying the
+timezone correction a second time.
+
+To fix this do :
+
+#+BEGIN_SRC sh
+  guix package -i ntp
+  sudo ntpd -qg -c /gnu/store/path-to-ntpd-conf(; sudo hwclock --systohc
+  guix package -r ntp
+#+END_SRC
+
+This will install the ntp package, fix the hardware timezone, and
+uninstall the ntp package afterward.
