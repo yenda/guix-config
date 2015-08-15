@@ -204,3 +204,6 @@ sudo X :1
     novena
 <mark_weaver> http://www.lowrisc.org/
 <mark_weaver> http://libreboot.org/
+* Handle font-cache
+<mark_weaver> I actually think the proper way would be to move the font cache into the profile, and then generate the font cache as part of profile generation
+<mark_weaver> we do something similar with the gtk-icon-cache
