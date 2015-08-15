@@ -15,7 +15,14 @@ set $mod Mod4
 # is used in the bar {} block below.
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-font pango:DejaVu Sans Mono 8
+font pango:Inconsolata 14
+
+new_window 1pixel
+new_float normal
+hide_edge_borders both
+focus_follows_mouse no
+
+
 # Before i3 v4.8, we used to recommend this one as the default:
 # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # The font above is very space-efficient, that is, it looks good, sharp and
@@ -30,7 +37,7 @@ floating_modifier $mod
 bindsym $mod+i exec i3-msg workspace 1: work && i3lock -c 111111 -d
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec emacsclient -c -e "(eshell)"
 #bindsym $mod+Return exec emacsclient
 
 # kill focused window
@@ -188,8 +195,10 @@ bar {
     inactive_workspace #586e75 #93a1a1 #002b36
     urgent_workspace #d33682 #d33682 #fdf6e3
   }
-  position top
-  status_command py3status -c ~/.i3/i3status.conf
+  position bottom
+  mode hide
+#  status_command py3status -c ~/.i3/i3status.conf
+  status_command i3status -c ~/.i3/i3status.conf
   tray_output primary
 }
 
@@ -204,6 +213,6 @@ exec xmodmap ~/.xmodmap
 #exec --no-startup-id "urxvt -name TERM1"
 #exec --no-startup-id "urxvt -name TERM2" 
 exec --no-startup-id "i3-msg 'workspace 1: work; exec emacs --deamon'"
-exec --no-startup-id "i3-msg 'workspace 2: web; exec firefox'"
+exec --no-startup-id "i3-msg 'workspace 2: web; exec icecat'"
 #exec --no-startup-id "i3-msg 'workspace 3: remote; append_layout /home/yenda/.i3/workspace-2.json'"
 #exec --no-startup-id "i3-msg 'workspace 3: mail; exec thunderbird; workspace 1: work'"
