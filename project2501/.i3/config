@@ -12,7 +12,7 @@ bindsym $mod+i exec i3-msg workspace 1: work && i3lock -c 111111 -d
 # start a terminal
 
 bindsym $mod+Return exec emacsclient -c -e "(eshell)"
-bindsym $mod+p exec emacsclient -e '(bongo-pause/resume)'
+bindsym $mod+space exec emacsclient -e '(bongo-pause/resume)'
 
 
 exec --no-startup-id "i3-msg 'workspace 1: work; exec emacs --deamon'"
