@@ -10,8 +10,14 @@ focus_follows_mouse no
 bindsym $mod+i exec i3-msg workspace 1: work && i3lock -c 111111 -d
 
 # start a terminal
+
 bindsym $mod+Return exec emacsclient -c -e "(eshell)"
-#bindsym $mod+Return exec emacsclient
+bindsym $mod+p exec emacsclient -e '(bongo-pause/resume)'
+
+
+exec --no-startup-id "i3-msg 'workspace 1: work; exec emacs --deamon'"
+exec --no-startup-id "i3-msg 'workspace 2: web; exec icecat'"
+
 
 # kill focused window
 bindsym $mod+Shift+q kill
