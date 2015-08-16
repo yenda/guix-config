@@ -26,6 +26,11 @@
                         (title 'label)
                         (mount-point "/home")
                         (type "ext4"))
+                       (file-system
+                        (device "sdb1")
+                        (title "Monster1")
+                        (mount-point "/mnt/Monster1")
+                        (type "ext4"))
                       %base-file-systems))
 
   (swap-devices '("/dev/sda2"))
