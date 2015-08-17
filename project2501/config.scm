@@ -27,8 +27,7 @@
                         (mount-point "/home")
                         (type "ext4"))
                        (file-system
-                        (device "sdb1")
-                        (title "Monster1")
+                        (device "/dev/sdb1")
                         (mount-point "/mnt/Monster1")
                         (type "ext4"))
                       %base-file-systems))
