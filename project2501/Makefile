@@ -3,8 +3,8 @@
 all: guix
 
 configure:
-	cp .xsession ~/.xsession
-	chmod +x ~/.xsession
+	cp .xsession ~/
+	cp -r .i3 ~/.i3
 
 guix:
 	cp ./config.scm /etc/config.scm
