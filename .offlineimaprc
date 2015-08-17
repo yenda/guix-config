@@ -1,0 +1,24 @@
+[general]
+accounts = Personal
+
+[Account Personal]
+localrepository = Local
+remoterepository = Remote
+
+[Repository Local]
+type = Maildir
+localfolders = ~/Maildir/Personal
+nametrans = lambda folder: re.sub('Drafts', 'INBOX.INBOX.Drafts',
+                           re.sub('Sent', 'INBOX.INBOX.Sent',
+                           re.sub('Trash', 'INBOX.INBOX.Trash', folder)))
+
+[Repository Remote]
+type = IMAP
+remotehost = ssl0.ovh.net
+remoteuser = eric@dvorsak.fr
+
+ssl = yes
+
+nametrans = lambda folder: re.sub('.*Drafts$', 'Drafts',
+                           re.sub('.*Sent$', 'Sent',
+                           re.sub('.*Trash$', 'Trash', folder)))

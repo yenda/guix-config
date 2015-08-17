@@ -1,0 +1,8 @@
+[user]
+	name = Eric Dvorsak
+	email = eric@dvorsak.fr
+[sendemail]
+	smtpencryption = tls
+	smtpserver = smtp.dvorsak.fr
+	smtpuser = eric@dvorsak.fr
+	smtpserverport = 587
